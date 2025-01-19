@@ -18,38 +18,44 @@ public class DienThoaiView extends javax.swing.JFrame {
      * Creates new form DienThoaiView
      */
     ArrayList<DienThoai> _listDTs = new ArrayList<>();
-    DefaultTableModel _defaultTableModel= new DefaultTableModel();
+    DefaultTableModel _defaultTableModel = new DefaultTableModel();
     DefaultComboBoxModel _defaultComboBoxModel = new DefaultComboBoxModel();
-   // DefaultComboBoxModel _defaultComboBoxModel_2 = new DefaultComboBoxModel();
+    // DefaultComboBoxModel _defaultComboBoxModel_2 = new DefaultComboBoxModel();
+
     public DienThoaiView() {
         initComponents();
         fakeData();
         loadDataTable();
         loadDataComboboxHang();
         loadDataComboboxDungLuong();
+        fillData(0);
     }
-    private void fakeData(){
+
+    private void fakeData() {
         _listDTs.add(new DienThoai("111", "Iphone", 15000, "Đỏ", 32));
         _listDTs.add(new DienThoai("222", "SamSung", 25000, "Đen", 64));
         _listDTs.add(new DienThoai("333", "Iphone", 18000, "Vàng", 128));
         _listDTs.add(new DienThoai("444", "Iphone", 20000, "Trắng", 256));
         _listDTs.add(new DienThoai("555", "SamSung", 32000, "Xanh", 32));
     }
-    private void loadDataTable(){
+
+    private void loadDataTable() {
         _defaultTableModel = (DefaultTableModel) tblDienThoai.getModel();
         _defaultTableModel.setRowCount(0);
         for (DienThoai dt : _listDTs) {
             _defaultTableModel.addRow(new Object[]{
                 dt.getImei(), dt.getHang(), dt.getGia(), dt.getMauSac(), dt.getDungLuong()
-                });
+            });
         }
     }
-    private void loadDataComboboxHang(){
+
+    private void loadDataComboboxHang() {
         _defaultComboBoxModel.addElement("Iphone");
         _defaultComboBoxModel.addElement("SamSung");
         cboHang.setModel(_defaultComboBoxModel);
     }
-    private void loadDataComboboxDungLuong(){
+
+    private void loadDataComboboxDungLuong() {
 //        _defaultComboBoxModel_2.addElement("16");
 //        _defaultComboBoxModel_2.addElement("32");
 //        _defaultComboBoxModel_2.addElement("64");
@@ -57,9 +63,33 @@ public class DienThoaiView extends javax.swing.JFrame {
 //        _defaultComboBoxModel_2.addElement("512");
 //        _defaultComboBoxModel_2.addElement("1024");
 //        cboDungLuong.setModel(_defaultComboBoxModel_2);
-        String[] dataDungLuong = {"16","32","64","128","512","1024"};
+        String[] dataDungLuong = {"16", "32", "64", "128", "512", "1024"};
         cboDungLuong.setModel(new DefaultComboBoxModel<>(dataDungLuong));
-        
+
+    }
+
+    private void fillData(int index) {
+        DienThoai dienThoai = _listDTs.get(index);
+        txtImei.setText(dienThoai.getImei());
+        txtGia.setText(String.valueOf(dienThoai.getGia()));
+        txtMauSac.setText(dienThoai.getMauSac());
+        cboHang.setSelectedItem(
+                dienThoai.getHang().equals("Iphone") ? "Iphone" : "SamSung");
+        //cboDungLuong => về nhà làm nốt => mai có trong bài kiểm tra.
+    }
+
+    private DienThoai getValueForm() {
+        return new DienThoai(
+                txtImei.getText(),
+                String.valueOf(cboHang.getSelectedItem()),
+                Integer.parseInt(txtGia.getText()),
+                txtMauSac.getText(),
+                Integer.parseInt(String.valueOf(cboDungLuong.getSelectedItem())));
+    }
+
+    private void addObject() {
+        DienThoai dt = getValueForm();
+        _listDTs.add(dt);
     }
 
     /**
@@ -81,8 +111,8 @@ public class DienThoaiView extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         txtImei = new javax.swing.JTextField();
         cboHang = new javax.swing.JComboBox<>();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        txtGia = new javax.swing.JTextField();
+        txtMauSac = new javax.swing.JTextField();
         cboDungLuong = new javax.swing.JComboBox<>();
         btnThem = new javax.swing.JButton();
         btnSua = new javax.swing.JButton();
@@ -123,6 +153,11 @@ public class DienThoaiView extends javax.swing.JFrame {
         cboDungLuong.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
 
         btnSua.setText("Sửa");
         btnSua.addActionListener(new java.awt.event.ActionListener() {
@@ -132,6 +167,11 @@ public class DienThoaiView extends javax.swing.JFrame {
         });
 
         btnXoa.setText("Xóa");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
         tblDienThoai.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -145,6 +185,11 @@ public class DienThoaiView extends javax.swing.JFrame {
                 "Imei", "Hãng", "Giá", "Màu Sắc", "Dung Lượng"
             }
         ));
+        tblDienThoai.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDienThoaiMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblDienThoai);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -167,14 +212,14 @@ public class DienThoaiView extends javax.swing.JFrame {
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtImei, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2)
+                            .addComponent(txtGia)
+                            .addComponent(txtMauSac)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtImei, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cboDungLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cboHang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jTextField3))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(60, 60, 60)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnXoa)
@@ -204,12 +249,12 @@ public class DienThoaiView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnXoa))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtMauSac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -223,8 +268,27 @@ public class DienThoaiView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        // TODO add your handling code here:
+        //sửa tự làm
+        
     }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void tblDienThoaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDienThoaiMouseClicked
+        // TODO add your handling code here:
+        int index = tblDienThoai.getSelectedRow();
+        fillData(index);
+    }//GEN-LAST:event_tblDienThoaiMouseClicked
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+
+        addObject();
+        loadDataTable();
+        //sau khi thêm -> thông báo thành công
+    }//GEN-LAST:event_btnThemActionPerformed
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        
+        //tự làm
+    }//GEN-LAST:event_btnXoaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -276,9 +340,9 @@ public class DienThoaiView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTable tblDienThoai;
+    private javax.swing.JTextField txtGia;
     private javax.swing.JTextField txtImei;
+    private javax.swing.JTextField txtMauSac;
     // End of variables declaration//GEN-END:variables
 }
