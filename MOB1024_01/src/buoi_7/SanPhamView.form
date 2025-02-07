@@ -281,6 +281,9 @@
               </Table>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tblSanPhamMouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -288,16 +291,25 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Th&#xea;m"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnThemActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnSua">
       <Properties>
         <Property name="text" type="java.lang.String" value="S&#x1eed;a"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSuaActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnXoa">
       <Properties>
         <Property name="text" type="java.lang.String" value="X&#xf3;a"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnXoaMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnSapXep">
       <Properties>

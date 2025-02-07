@@ -89,7 +89,7 @@ public class DienThoaiView extends javax.swing.JFrame {
 
     private void addObject() {
         DienThoai dt = getValueForm();
-        _listDTs.add(dt);
+        _listDTs.add(dt);//=> service.add()
     }
 
     /**

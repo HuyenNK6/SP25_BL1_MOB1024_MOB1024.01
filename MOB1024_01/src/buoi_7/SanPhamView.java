@@ -4,6 +4,12 @@
  */
 package buoi_7;
 
+import buoi4.DienThoai;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Huyen
@@ -13,8 +19,53 @@ public class SanPhamView extends javax.swing.JFrame {
     /**
      * Creates new form SanPhamView
      */
+    ArrayList<SanPham> list = new ArrayList<>();
+    SanPhamService service = new SanPhamService();
+    DefaultTableModel _defaultTableModel = new DefaultTableModel();
+    DefaultComboBoxModel _defaultComboBoxModel = new DefaultComboBoxModel();
+
     public SanPhamView() {
         initComponents();
+        loadDataComboboxHang();
+        list = service.getAll();
+        loadDataTable();
+        fillData(0);
+    }
+
+    private SanPham getValueForm() {
+        return new SanPham(
+                txtMaSP.getText(),
+                txtTenSP.getText(),
+                Integer.parseInt(txtKhoiLuong.getText()),
+                String.valueOf(cboLoaiSP.getSelectedItem())
+        );
+    }
+
+    private void loadDataComboboxHang() {
+        _defaultComboBoxModel.addElement("Nhập khẩu");
+        _defaultComboBoxModel.addElement("Xuất khẩu");
+        cboLoaiSP.setModel(_defaultComboBoxModel);
+    }
+
+    private void loadDataTable() {
+        _defaultTableModel = (DefaultTableModel) tblSanPham.getModel();
+        _defaultTableModel.setRowCount(0);
+        for (SanPham sp : list) {
+            _defaultTableModel.addRow(new Object[]{
+                sp.getMaSP(), sp.getTen(), sp.getLoaiSP(), sp.getKhoiLuong()
+            });
+        }
+    }
+//lấy dữ liệu đẩy lên form thông qua vị trí
+
+    private void fillData(int index) {
+        SanPham sanPham = list.get(index);
+        txtMaSP.setText(sanPham.getMaSP());
+        txtKhoiLuong.setText(String.valueOf(sanPham.getKhoiLuong()));
+        txtTenSP.setText(sanPham.getTen());
+        cboLoaiSP.setSelectedItem(
+                sanPham.getLoaiSP().equals("Nhập khẩu") ? "Nhập khẩu" : "Xuất khẩu");
+
     }
 
     /**
@@ -159,13 +210,33 @@ public class SanPhamView extends javax.swing.JFrame {
                 "Mã SP", "Tên SP", "Khối lượng", "Loại SP"
             }
         ));
+        tblSanPham.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSanPhamMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblSanPham);
 
         btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
 
         btnSua.setText("Sửa");
+        btnSua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaActionPerformed(evt);
+            }
+        });
 
         btnXoa.setText("Xóa");
+        btnXoa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnXoaMouseClicked(evt);
+            }
+        });
 
         btnSapXep.setText("Sắp xếp");
 
@@ -230,6 +301,55 @@ public class SanPhamView extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tblSanPhamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamMouseClicked
+        // TODO add your handling code here:
+        int index = tblSanPham.getSelectedRow();
+        fillData(index);
+    }//GEN-LAST:event_tblSanPhamMouseClicked
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        // TODO add your handling code here:
+        SanPham newSanPham = getValueForm();
+        service.addSanPham(newSanPham);
+        loadDataTable();
+        JOptionPane.showMessageDialog(this, "Thêm thành công");
+    }//GEN-LAST:event_btnThemActionPerformed
+
+    private void btnXoaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnXoaMouseClicked
+        // TODO add your handling code here:
+        try {
+            String maSP = txtMaSP.getText();
+            if (JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa sản phẩm này không?",
+                    "Thông báo", JOptionPane.YES_NO_OPTION
+            ) == JOptionPane.YES_OPTION) {
+                service.deleteSanPham(maSP);
+                loadDataTable();
+                JOptionPane.showMessageDialog(this, "Xóa thành công");
+            }
+            if (list.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Không có sản phẩm được chọn");
+            } else {
+                loadDataTable();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi" + e.getMessage());
+        }
+    }//GEN-LAST:event_btnXoaMouseClicked
+
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+        int row = tblSanPham.getSelectedRow();
+        if (row != -1) {
+            SanPham sp = list.get(row);
+            sp.setMaSP(txtMaSP.getText());
+            sp.setTen(txtTenSP.getText());
+            sp.setKhoiLuong(Integer.parseInt(txtKhoiLuong.getText()));
+            sp.setLoaiSP((String) cboLoaiSP.getSelectedItem());
+            loadDataTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn dữ liệu sửa");
+        }
+    }//GEN-LAST:event_btnSuaActionPerformed
 
     /**
      * @param args the command line arguments
