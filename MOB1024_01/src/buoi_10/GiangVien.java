@@ -19,6 +19,7 @@ ma VARCHAR(50) PRIMARY KEY,
 public class GiangVien {
     private String ma;
     private String ten;
+    private String loai;
     private int tuoi;
     private int bac;
     private int gioiTinh;
@@ -26,12 +27,21 @@ public class GiangVien {
     public GiangVien() {
     }
 
-    public GiangVien(String ma, String ten, int tuoi, int bac, int gioiTinh) {
+    public GiangVien(String ma, String ten, String loai, int tuoi, int bac, int gioiTinh) {
         this.ma = ma;
         this.ten = ten;
+        this.loai = loai;
         this.tuoi = tuoi;
         this.bac = bac;
         this.gioiTinh = gioiTinh;
+    }
+
+    public String getLoai() {
+        return loai;
+    }
+
+    public void setLoai(String loai) {
+        this.loai = loai;
     }
 
     public String getMa() {
