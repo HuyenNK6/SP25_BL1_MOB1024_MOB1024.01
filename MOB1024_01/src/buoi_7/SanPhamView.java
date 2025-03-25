@@ -319,32 +319,36 @@ public class SanPhamView extends javax.swing.JFrame {
     private void btnXoaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnXoaMouseClicked
         // TODO add your handling code here:
         try {
-            String maSP = txtMaSP.getText();
-            if (JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa sản phẩm này không?",
-                    "Thông báo", JOptionPane.YES_NO_OPTION
-            ) == JOptionPane.YES_OPTION) {
-                service.deleteSanPham(maSP);
-                loadDataTable();
-                JOptionPane.showMessageDialog(this, "Xóa thành công");
-            }
-            if (list.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Không có sản phẩm được chọn");
+            int rowIndex = tblSanPham.getSelectedRow();
+            if (rowIndex != -1) {
+                String maSP = txtMaSP.getText();
+                int choice = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa sản phẩm này không?",
+                        "Thông báo", JOptionPane.YES_NO_OPTION);
+                if (choice == JOptionPane.YES_OPTION) {
+                    service.deleteSanPham(maSP);
+                    loadDataTable();
+                    JOptionPane.showMessageDialog(this, "Xóa thành công");
+                }
+
             } else {
-                loadDataTable();
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn dữ liệu xóa");
             }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Lỗi" + e.getMessage());
         }
     }//GEN-LAST:event_btnXoaMouseClicked
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        int row = tblSanPham.getSelectedRow();
-        if (row != -1) {
-            SanPham sp = list.get(row);
-            sp.setMaSP(txtMaSP.getText());
-            sp.setTen(txtTenSP.getText());
-            sp.setKhoiLuong(Integer.parseInt(txtKhoiLuong.getText()));
-            sp.setLoaiSP((String) cboLoaiSP.getSelectedItem());
+        int rowIndex = tblSanPham.getSelectedRow();
+        if (rowIndex != -1) {
+            SanPham spOld = list.get(rowIndex);
+            SanPham spNew = new SanPham(txtMaSP.getText(), txtTenSP.getText(),
+                    Integer.parseInt(txtKhoiLuong.getText()), (String) cboLoaiSP.getSelectedItem());
+            if (!spOld.getMaSP().equalsIgnoreCase(spNew.getMaSP())) {
+                JOptionPane.showMessageDialog(this, "Không sửa mã SP!!");
+            }
+            service.updateSanPham(rowIndex, spNew);
             loadDataTable();
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn dữ liệu sửa");

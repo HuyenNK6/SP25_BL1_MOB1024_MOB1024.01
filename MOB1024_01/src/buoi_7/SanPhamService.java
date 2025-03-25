@@ -31,8 +31,12 @@ public class SanPhamService {
     public void addSanPham(SanPham sp){
         list.add(sp);
     }
-    public void updateSanPham(String maSP, SanPham newSP){
-        //update
+    public void updateSanPham(int index, SanPham spNew){
+        //list.set(index, newSP);
+        SanPham sp= list.get(index);
+        sp.setTen(spNew.getTen());
+        sp.setKhoiLuong(spNew.getKhoiLuong());
+        sp.setLoaiSP(spNew.getLoaiSP());
     }
     public void deleteSanPham(String maSP){
         //delele
